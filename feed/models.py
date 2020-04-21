@@ -17,7 +17,8 @@ class Category(models.Model):
 class Post(models.Model):
 	type_choices = [
 		('book', 'book'),
-		('doc', 'documentary')
+		('doc', 'documentary'),
+		('thinker', 'thinker/person')
 	]
 	rating_choices = [
 		(1, 1),
