@@ -1,6 +1,64 @@
-{% extends "feed/base.html" %} 
+{% extends "feed/base.html" %}
+{% load my_extras %}
+{% load static %} <!-- ** replace post image with user profile img ** -->
 {% block content %}
 <div class="page-header">
 <h1 class="text-center">Knowledge Tree Home</h1>
 </div>
+<div class="container">
+<div class="jumbotron">
+<p>
+Knowledge Tree is an application designed to faciliate learning through organising educative resources and integrated note taking.
+</p>
+</div>
+</div>
+
+	{% for post in posts %}
+		<article class="media content-section">
+			<img class="rounded-circle article-img" src = "{% static 'img/logo.png' %}">
+		  <div class="col-md-9 pull-right">
+		    <div class="article-metadata">
+		      <a class="mr-2" href="">{{ post.posted_by }}</a>
+		      <small class="text-muted">{{ post.date_posted|date:"d F, Y P e" }}</small>
+		    </div>
+		    <h2>
+		    {% if post.medium == "book" %}
+		    <span class="fas fa-book"></span>
+		    {% elif post.medium == "doc" %}
+		    <span class="fas fa-video"></span>
+		    {% else %}
+		    <span class="fas fa-user-tie"></span>
+		    {% endif %}
+		    <a class="article-title" href="">{{ post.title }}</a>
+			</h2>
+	    	<p class="pt-2">
+	    	{% for category in post.category.all|dictsort:"category" %}
+	    	<a href="#" class="btn btn-primary btn-sm">{{category}} </a>
+	    	{% endfor %}
+		    </p>
+		    <p class="article-content">{{ post.notes }}</p>		
+		  </div>
+
+	  	    <div class="ml-auto pt-5">
+		    <a href="#" class="btn btn-info btn-sm">{{ post.author }}</a>
+		    <p class="pt-2"><a href="#" class="btn btn-default disabled btn-sm">
+		    {{ post.status|title }}</a></p>
+		    <p>
+		    <!-- show rating stars -->
+		    {% for rating in post.rating|range %}
+		    <span class="fas fa-star"></span>
+		    {% endfor %}
+
+		    <!-- show blank stars for 5 - rating -->
+		    {% if post.rating < 5 %}
+		    {% for diff in post.rating|rating_difference %}
+		    <span class="far fa-star"></span>
+		    {% endfor %}
+		    {% endif %}
+			</p>
+			</div>
+		</article>
+	{% endfor %}
+
+
 {% endblock content %}

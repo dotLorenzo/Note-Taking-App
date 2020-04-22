@@ -33,7 +33,7 @@ class Post(models.Model):
 		('completed', 'completed')
 	]
 	title = models.CharField(max_length=100)
-	_type = models.CharField(max_length=100,choices=type_choices)
+	medium = models.CharField(max_length=100,choices=type_choices)
 	category = models.ManyToManyField(Category)
 	author = models.CharField(max_length=100)
 	notes = models.TextField()
