@@ -1,13 +1,14 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 
 # Post content to server model
 
 
-class Category(models.Model):
+class Categories(models.Model):
 	category = models.CharField(max_length=100)
 
 	def __str__(self):
@@ -16,9 +17,10 @@ class Category(models.Model):
 
 class Post(models.Model):
 	type_choices = [
-		('book', 'book'),
-		('doc', 'documentary'),
-		('thinker', 'thinker/person')
+		('book', 'Book'),
+		('doc', 'Documentary'),
+		('thinker', 'Thinker/Person'),
+		('misc','Miscellaneous')
 	]
 	rating_choices = [
 		(1, 1),
@@ -34,9 +36,9 @@ class Post(models.Model):
 	]
 	title = models.CharField(max_length=100)
 	medium = models.CharField(max_length=100,choices=type_choices)
-	category = models.ManyToManyField(Category)
+	categories = models.ManyToManyField(Categories)
 	author = models.CharField(max_length=100)
-	notes = models.TextField()
+	notes = RichTextField()
 	status = models.CharField(
 		max_length=100,
 		choices=status_choices,

@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'feed.apps.FeedConfig',
+    'crispy_forms',
+    'ckeditor',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -119,3 +121,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CRISPY_TEMPLATE_PACK ='bootstrap4'
+
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'skin': 'icy_orange',
+        'width':'100%',
+        'height':'500px',
+        # 'uiColor': '#046307',
+        'toolbar': [["Format", "Bold", "Italic", "Underline", "Strike", "Scayt"],
+                ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
+                 'JustifyRight', 'JustifyBlock'],
+                ["Image", "Table", "Link", "Unlink", "SectionLink", "Subscript", "Superscript"], ['Undo', 'Redo'], ["Find"],
+                ['Styles', 'Format', 'Font', 'FontSize', 'TextColor', 'BGColor', 'HorizontalRule', 'Smiley', 'SpecialChar'],["Maximize"]],
+    },
+}
