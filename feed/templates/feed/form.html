@@ -1,6 +1,7 @@
 {% extends "feed/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+<div class="container-fluid w-75">
 	<div class="content-section">
 		<form method="POST">
 			{% csrf_token %} <!--required by djano for security (sql attacks)-->
@@ -8,7 +9,6 @@
 				<legend class="border-bottom mb-4">New Notes</legend>
 				{{ form|crispy }}
 				{{form.media}}
-				{{media|crispy}}
 			</fieldset>
 			<div class="form-group">
 				<button class="btn btn-info" type="submit">Add Notes</button>
@@ -16,4 +16,5 @@
 			<!--{{form.instance.rating}}-->
 		</form>
 	</div>
+</div>
 {% endblock content %}

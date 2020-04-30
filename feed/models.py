@@ -20,7 +20,7 @@ class Post(models.Model):
 		('book', 'Book'),
 		('doc', 'Documentary'),
 		('thinker', 'Thinker/Person'),
-		('misc','Miscellaneous')
+		('misc','Other/Miscellaneous')
 	]
 	rating_choices = [
 		(1, 1),
@@ -35,9 +35,10 @@ class Post(models.Model):
 		('completed', 'completed')
 	]
 	title = models.CharField(max_length=100)
-	medium = models.CharField(max_length=100,choices=type_choices)
+	note_type = models.CharField(max_length=100,choices=type_choices,null=True)
 	categories = models.ManyToManyField(Categories)
-	author = models.CharField(max_length=100)
+	category = models.CharField(max_length=100, null=True)
+	author = models.CharField(max_length=100, default='', blank=True)
 	notes = RichTextField()
 	status = models.CharField(
 		max_length=100,

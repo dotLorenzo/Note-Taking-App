@@ -2,22 +2,10 @@
 {% load my_extras %}
 {% load static %} <!-- ** replace post image with user profile img ** -->
 {% block content %}
-<div class="container-fluid w-75">
-<div class="page-header">
-<h1 class="text-center">Knowledge Tree Home</h1>
-</div>
-<div class="container">
-<div class="jumbotron">
-<p>
-Knowledge Tree is an application designed to faciliate learning through organising educative resources and integrated note taking.
-</p>
-</div>
-</div>
-
-	{% for post in posts %}
+<div class="container-fluid">
 		<article class="media content-section">
 			<img class="rounded-circle article-img" src = "{% static 'img/logo.png' %}">
-		  <div class="col-md-10">
+		  <div>
 		    <div class="article-metadata">
 		      <a class="mr-2" href="">{{ post.posted_by }}</a>
 		      <small class="text-muted">{{ post.date_posted|date:"d F, Y P e" }}</small>
@@ -30,7 +18,7 @@ Knowledge Tree is an application designed to faciliate learning through organisi
 		    {% else %}
 		    <span class="fas fa-user-tie"></span>
 		    {% endif %}
-		    <a class="article-title" href="{% url 'post-detail' post.id%}">{{ post.title }}</a>
+		    <a class="article-title" href="">{{ post.title }}</a>
 			</h2>
 	    	<!-- <p class="pt-2">
 	    	{% for category in post.categories.all|dictsort:"category" %}
@@ -69,7 +57,6 @@ Knowledge Tree is an application designed to faciliate learning through organisi
 			</p>
 			</div>
 		</article>
-	{% endfor %}
 
 </div>
 {% endblock content %}

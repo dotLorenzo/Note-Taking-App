@@ -1,13 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, FormView, DetailView
 from django import forms
 from .models import Post
 from .forms import CreateForm
 
-# Create your views here.
-# def home(request):
-
-# 	return render(request, 'feed/home.html')
 
 class PostListView(ListView):
 	model = Post
@@ -16,15 +12,17 @@ class PostListView(ListView):
 	ordering = ['-date_posted']
 	paginate_by = 5
 
-
-class PostCreateView(CreateView):
+class PostDetailView(DetailView):
 	model = Post
-	context_object_name = 'items'
-	fields = ['title', 'medium', 'author', 'status', 'rating', 'category', 'notes']
-
-
-def createPost(request):
-	form = CreateForm()
-
-	return render(request, 'feed/form.html', {'form':form})
+	context_object_name = 'post'
+	
+class createPost(FormView):
+	template_name = 'feed/form.html'
+	form_class = CreateForm
+	success_url = '/'
+	
+	def form_valid(self, form):
+		form.instance.posted_by = self.request.user
+		form.save()
+		return super().form_valid(form)
 
