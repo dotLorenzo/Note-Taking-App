@@ -16,7 +16,7 @@ class PostDetailView(DetailView):
 	model = Post
 	context_object_name = 'post'
 	
-class createPost(FormView):
+class CreatePost(FormView):
 	template_name = 'feed/form.html'
 	form_class = CreateForm
 	success_url = '/'
@@ -25,4 +25,15 @@ class createPost(FormView):
 		form.instance.posted_by = self.request.user
 		form.save()
 		return super().form_valid(form)
+
+class EditPost(FormView):
+	template_name = 'feed/edit_form.html'
+	form_class = CreateForm
+	success_url = '/'
+	
+	def form_valid(self, form):
+		form.instance.posted_by = self.request.user
+		form.save()
+		return super().form_valid(form)
+
 

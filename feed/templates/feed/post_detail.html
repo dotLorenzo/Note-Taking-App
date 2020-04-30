@@ -9,6 +9,8 @@
 		    <div class="article-metadata">
 		      <a class="mr-2" href="">{{ post.posted_by }}</a>
 		      <small class="text-muted">{{ post.date_posted|date:"d F, Y P e" }}</small>
+		        <a href="{% url 'post-edit' post.id%}" class="btn btn-default btn-sm ml-3">Edit</a>
+		    <a href="#" class="btn btn-default btn-sm">Delete</a>
 		    </div>
 		    <h2>
 		    {% if post.note_type == "book" %}

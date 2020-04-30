@@ -17,7 +17,8 @@ Knowledge Tree is an application designed to faciliate learning through organisi
 	{% for post in posts %}
 		<article class="media content-section">
 			<img class="rounded-circle article-img" src = "{% static 'img/logo.png' %}">
-		  <div class="col-md-10">
+		  <!-- <div class="col-md-10"> -->
+		  	<div>
 		    <div class="article-metadata">
 		      <a class="mr-2" href="">{{ post.posted_by }}</a>
 		      <small class="text-muted">{{ post.date_posted|date:"d F, Y P e" }}</small>

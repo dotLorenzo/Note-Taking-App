@@ -36,7 +36,7 @@ class Post(models.Model):
 	]
 	title = models.CharField(max_length=100)
 	note_type = models.CharField(max_length=100,choices=type_choices,null=True)
-	categories = models.ManyToManyField(Categories)
+	# categories = models.ManyToManyField(Categories)
 	category = models.CharField(max_length=100, null=True)
 	author = models.CharField(max_length=100, default='', blank=True)
 	notes = RichTextField()
