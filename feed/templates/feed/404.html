@@ -1,0 +1,14 @@
+{% load static %} 
+<!DOCTYPE html>
+<html>
+<head>
+	<title>404 Error</title>
+</head>
+<body>
+<h1>Oops that page does not exist...</h1>
+<a href="{% url 'feed-home' %}">Home</a>
+<div><br>
+<img src="{% static 'img/404_confused_homer.jpg' %}" alt=":(" />
+</div>
+</body>
+</html>

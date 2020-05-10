@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
+from django.urls import reverse
 
 # Create your models here.
 
@@ -10,6 +11,9 @@ from ckeditor.fields import RichTextField
 
 class Categories(models.Model):
 	category = models.CharField(max_length=100)
+
+	class Meta:
+		verbose_name_plural = "Categories"
 
 	def __str__(self):
 		return self.category
@@ -20,7 +24,8 @@ class Post(models.Model):
 		('book', 'Book'),
 		('doc', 'Documentary'),
 		('thinker', 'Thinker/Person'),
-		('misc','Other/Miscellaneous')
+		('misc','Other/Miscellaneous'),
+		(None, 'Select type...')
 	]
 	rating_choices = [
 		(1, 1),
@@ -54,3 +59,8 @@ class Post(models.Model):
 
 	def __str__(self):
 		return self.title
+
+	def get_absolute_url(self):
+		return reverse('post-detail', kwargs={'pk':self.pk})
+
+

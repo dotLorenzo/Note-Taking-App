@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.views.generic import ListView, FormView, DetailView
+from django.utils import timezone
+from django.views.generic import ListView, FormView, DetailView, UpdateView
 from django import forms
 from .models import Post
 from .forms import CreateForm
@@ -26,14 +27,20 @@ class CreatePost(FormView):
 		form.save()
 		return super().form_valid(form)
 
-class EditPost(FormView):
+
+class EditPostView(UpdateView):
+	model = Post
 	template_name = 'feed/edit_form.html'
-	form_class = CreateForm
-	success_url = '/'
-	
+	fields = ['title', 'note_type', 'author', 'category', 'status', 'rating', 'notes']
+
 	def form_valid(self, form):
+		form.instance.date_posted = timezone.now()
 		form.instance.posted_by = self.request.user
 		form.save()
 		return super().form_valid(form)
+
+
+def error_404(request, exception):
+	return render(request, 'feed/404.html', {})
 
 

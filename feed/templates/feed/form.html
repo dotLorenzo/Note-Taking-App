@@ -24,10 +24,11 @@
 var notes = "#div_id_notes";
 
 $(notes).change(function(){
-	save();
+	save(event);
 	});
 
 function save(event) {
+	alert("changed!");
     event.target.form['version_number'].value++;
     var request = new XMLHttpRequest();
     request.open(event.target.form.method, event.target.form.action);
