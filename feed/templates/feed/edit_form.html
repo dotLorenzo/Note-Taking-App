@@ -22,6 +22,6 @@
 </div>
 {% endblock content %}
 {% block scripts %}
-<script src = " {% static 'js_scripts/changeFields.js' %} "></script>
+<script src = " {% static 'js_scripts/changeFields.js' %} " id="post-id" post-id="{{post.id}}"></script>
 <script src = " {% static 'js_scripts/autoSave.js' %} "></script>
 {% endblock %}

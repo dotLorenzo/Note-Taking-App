@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.contrib.messages.views import SuccessMessageMixin
-from django.utils import timezone
+from django.contrib import messages
+from django.utils import timezone, dateformat
 from django.views.generic import ListView, FormView, DetailView, UpdateView
+from django.views.decorators.csrf import csrf_exempt
 from django import forms
+from django.http import HttpResponse, HttpResponseNotFound
 from .models import Post
 from .forms import CreateForm
 
@@ -20,6 +23,7 @@ class PostDetailView(DetailView):
 	
 class CreatePost(SuccessMessageMixin, FormView):
 	template_name = 'feed/form.html'
+	context_object_name = 'post'
 	form_class = CreateForm
 	success_url = '/'
 	
@@ -33,6 +37,7 @@ class CreatePost(SuccessMessageMixin, FormView):
 class EditPostView(SuccessMessageMixin, UpdateView):
 	model = Post
 	template_name = 'feed/edit_form.html'
+	context_object_name = 'post'
 	fields = ['title', 'note_type', 'author', 'category', 'status', 'rating', 'notes']
 
 	def form_valid(self, form):
@@ -45,5 +50,42 @@ class EditPostView(SuccessMessageMixin, UpdateView):
 
 def error_404(request, exception):
 	return render(request, 'feed/404.html', {})
+
+@csrf_exempt
+def autosave_post(request):
+	if request.is_ajax():
+		data = request.POST.dict()
+		field = data['field']
+		value = data['value']
+		
+		try:
+			post_id = int(data['id'])
+			post = Post.objects.get(id=post_id)
+			print(post)
+		except:
+			print("No matching post...")
+			return HttpResponseNotFound("post does not exist")
+
+		if "CKEDITOR" in field:
+			Post.objects.filter(id=post_id).update(notes=value)
+		elif "title" in field:
+			Post.objects.filter(id=post_id).update(title=value)
+		elif "note_type" in field:
+			Post.objects.filter(id=post_id).update(note_type=value)
+		elif "category" in field:
+			Post.objects.filter(id=post_id).update(category=value)
+		elif "status" in field:
+			Post.objects.filter(id=post_id).update(status=value)
+		elif "author" in field:
+			Post.objects.filter(id=post_id).update(author=value)
+		elif "rating" in field:
+			Post.objects.filter(id=post_id).update(rating=value)
+
+		
+		date_format = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
+		messages.success(request, f"Notes Saved {date_format}")
+		
+		return HttpResponse("saved")
+
 
 

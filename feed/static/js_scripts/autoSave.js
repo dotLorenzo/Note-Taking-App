@@ -1,4 +1,5 @@
 $(function() {
+	let postID = $("#post-id").attr("post-id");
 	let title = "#id_title";
 	let note_type = "#id_note_type";
 	let category = "#id_category";
@@ -47,13 +48,15 @@ $(function() {
 
 					if(prevState != currentState) {
 						states[state] = currentState;
-						setCookie(state,currentState,7);
+
+						saveData({"field": state, "value":currentState, "id":postID})
 					}
 				}
 				else {
 					if(prevState != currentNotes.getData()) {
 						states[state] = currentNotes.getData();
-						setCookie("CKEDITOR",currentNotes.getData(),7);
+						
+						saveData({"field": "CKEDITOR", "value":currentNotes.getData(), "id":postID})
 					}
 				}
 			}
@@ -68,13 +71,37 @@ $(function() {
 		let expires = "; expires="+date.toGMTString();
 
 		document.cookie = `${name}=${value}${expires}`;
+
+		console.log("setting cookie", name, value, days);
+	}
+
+
+	//if minimum number of fields are filled out then save the field on the db
+	function saveData(fieldData) {
+    	$.ajax({
+	        method: 'POST',
+	        url: '/post/autosave/',
+	        data: fieldData,
+	        success: function (data) {
+	             console.log("successfully updated db");
+	        },
+	        error: function (data) {
+	             setCookie(fieldData.field, fieldData.value, 7);
+	        }
+    	});
+    	deleteCookies();
 	}
 
 	//delete cookies on form submission
 	$("form").submit(function() {
+		deleteCookies();
+	});	
+	
+	function deleteCookies() {
 		let cookies = document.cookie.split(";");
 		for (let i = 0; i < cookies.length; i++) {
-		  setCookie(cookies[i].split("=")[0],"",-1);
+		  if (!cookies[i].trim().startsWith("csrftoken"))
+		  setCookie(cookies[i].split("=")[0],"",-1); //delete - set expiry to -1 days
 		}
-	});		
+	}
 })
