@@ -67,6 +67,15 @@
 </div>
 </nav>
 </header>
+  {% if messages %}
+    {% for message in messages %}
+    <div class="container-fluid w-75">
+    <div class="alert alert-{{message.tags}} text-center">
+    {{ message }}
+    </div>
+	</div>
+    {% endfor %}
+  {% endif %}
 
 {% block content %}{% endblock %} 
 

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.messages.views import SuccessMessageMixin
 from django.utils import timezone
 from django.views.generic import ListView, FormView, DetailView, UpdateView
 from django import forms
@@ -17,7 +18,7 @@ class PostDetailView(DetailView):
 	model = Post
 	context_object_name = 'post'
 	
-class CreatePost(FormView):
+class CreatePost(SuccessMessageMixin, FormView):
 	template_name = 'feed/form.html'
 	form_class = CreateForm
 	success_url = '/'
@@ -25,10 +26,11 @@ class CreatePost(FormView):
 	def form_valid(self, form):
 		form.instance.posted_by = self.request.user
 		form.save()
+		self.success_message =  f'New notes {form.instance.title} created.'
 		return super().form_valid(form)
 
 
-class EditPostView(UpdateView):
+class EditPostView(SuccessMessageMixin, UpdateView):
 	model = Post
 	template_name = 'feed/edit_form.html'
 	fields = ['title', 'note_type', 'author', 'category', 'status', 'rating', 'notes']
@@ -37,6 +39,7 @@ class EditPostView(UpdateView):
 		form.instance.date_posted = timezone.now()
 		form.instance.posted_by = self.request.user
 		form.save()
+		self.success_message = f'{form.instance.title} edited.'
 		return super().form_valid(form)
 
 
