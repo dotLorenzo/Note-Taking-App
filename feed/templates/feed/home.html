@@ -47,7 +47,13 @@ Knowledge Tree is an application designed to faciliate learning through organisi
 </p>
 </div>
 </div>
-
+{% if not user.is_authenticated %}
+ <div class="container-fluid w-75">
+  <div class="alert alert-warning text-center">
+    Warning: You are not logged in, you must be logged in to add new notes and make edits.
+    </div>
+  </div>
+{% endif %}
 	{% for post in posts %}
 		<article class="media content-section">
 			<img class="rounded-circle article-img" src = "{% static 'img/logo.png' %}">

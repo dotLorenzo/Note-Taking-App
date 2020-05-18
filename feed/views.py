@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib import messages
+# from django.contrib import messages
 from django.utils import timezone, dateformat
 from django.views.generic import ListView, FormView, DetailView, UpdateView
 from django.views.decorators.csrf import csrf_exempt
@@ -82,10 +82,12 @@ def autosave_post(request):
 			Post.objects.filter(id=post_id).update(rating=value)
 
 		
-		date_format = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
-		messages.success(request, f"Notes Saved {date_format}")
+		date_format = dateformat.format(timezone.now(), 'H:i:s M d').split(" ", 1)
+		formatted_date = f"{date_format[0]} on {date_format[1]}"
+		autosave_message = f"Notes saved {formatted_date}"
+		# messages.success(request, autosave_message)
 		
-		return HttpResponse("saved")
+		return HttpResponse(autosave_message)
 
 
 

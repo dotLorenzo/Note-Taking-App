@@ -1,9 +1,5 @@
-dynamic fields in note creation Y
-option to add categories Y
+autosave on creation check-box
 
-post new notes to server Y
-add notes to homepage Y
+add categories below dynamically Y
 
-
-add spell check Y
-add asyncronous auto-save
+when we update db with title or categories, remove all trailing white space and replace multi-white-space with single white space

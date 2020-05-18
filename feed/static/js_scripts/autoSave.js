@@ -60,7 +60,7 @@ $(function() {
 					}
 				}
 			}
-		},2000);
+		},3000);
 		
 	}
 
@@ -84,6 +84,13 @@ $(function() {
 	        data: fieldData,
 	        success: function (data) {
 	             console.log("successfully updated db");
+	             if(!$('#autosave_message').length) {
+		             let message_container = $("<div class='container-fluid w-75'>").append("<div class='alert alert-success text-center' id='autosave_message'>" + data + "</div></div>");
+		             $("#div_id_status").after(message_container);
+	        	}
+	        	else {
+	        		$('#autosave_message').text(data);
+	        	}
 	        },
 	        error: function (data) {
 	             setCookie(fieldData.field, fieldData.value, 7);
