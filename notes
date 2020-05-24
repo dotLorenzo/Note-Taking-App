@@ -2,4 +2,6 @@ autosave on creation check-box
 
 add categories below dynamically Y
 
-when we update db with title or categories, remove all trailing white space and replace multi-white-space with single white space
+when we update db with title or categories, remove all trailing white space and replace multi-white-space with single white space (and remove special characters?)  Y
+
+auto insert categories to category db and auto remove categories no longer present

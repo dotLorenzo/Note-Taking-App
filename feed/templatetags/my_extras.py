@@ -16,5 +16,6 @@ def diff(num):
 
 @register.filter(name="format_category")
 def get_categories(data):
-	categories = [c.strip().title() for c in data.split(',') if c.strip()]
+	# categories = [c.strip().title() for c in data.split(',') if c.strip()]
+	categories = [c.title() for c in data.split(',')]
 	return sorted(categories)

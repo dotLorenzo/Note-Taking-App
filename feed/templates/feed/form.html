@@ -8,6 +8,9 @@
 			{% csrf_token %} <!--required by djano for security (sql attacks)-->
 			<fieldset class="form-group">
 				<legend class="border-bottom mb-4">New Notes</legend>
+				<div class="checkbox">
+				 <label><input type="checkbox" value="" class="mr-2" id="autosave_checked">Autosave after filling out fields.</label>
+				 </div>
 				{{ form|crispy }}
 				{{form.media}}
 				<input type="hidden" name="version_number" value="1" />
@@ -23,5 +26,7 @@
 {% block scripts %}
 
 <script src = " {% static 'js_scripts/changeFields.js' %} "></script>
+<script src = " {% static 'js_scripts/triggerAutoSave.js' %} "></script>
 <script src = " {% static 'js_scripts/autoSave.js' %} "></script>
+<script src = " {% static 'js_scripts/showCategories.js' %} "></script>
 {% endblock %}

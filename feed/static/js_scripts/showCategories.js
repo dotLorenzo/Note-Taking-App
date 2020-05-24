@@ -26,7 +26,7 @@ $(function() {
 			//change spaces to underscores for button ids (.replace wont work?)
 			category_id = category.split(/\s/).join("_");
 			let id = `category_button_${category_id}`;
-			console.log(category, category_id, typeof category);
+			// console.log(category, category_id, typeof category);
 
 			button = $("<a class='btn btn-primary btn-sm ml-2' style='text-transform:capitalize;' href='#'></a>").text(category).attr("id", id);
 			

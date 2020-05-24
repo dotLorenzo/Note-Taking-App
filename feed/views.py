@@ -20,12 +20,23 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
 	model = Post
 	context_object_name = 'post'
-	
+
 class CreatePost(SuccessMessageMixin, FormView):
 	template_name = 'feed/form.html'
 	context_object_name = 'post'
 	form_class = CreateForm
 	success_url = '/'
+
+	def post(self, request, *args, **kwargs):
+		if request.is_ajax():
+			data = request.POST.dict()
+			autosave = data['autosave']
+			print(data)
+			if autosave:
+				self.success_url = f'/post/{self.pk}/edit'
+
+
+		return HttpResponse("returned response")
 	
 	def form_valid(self, form):
 		form.instance.posted_by = self.request.user
@@ -73,6 +84,7 @@ def autosave_post(request):
 		elif "note_type" in field:
 			Post.objects.filter(id=post_id).update(note_type=value)
 		elif "category" in field:
+			print(value)
 			Post.objects.filter(id=post_id).update(category=value)
 		elif "status" in field:
 			Post.objects.filter(id=post_id).update(status=value)
@@ -88,6 +100,3 @@ def autosave_post(request):
 		# messages.success(request, autosave_message)
 		
 		return HttpResponse(autosave_message)
-
-
-

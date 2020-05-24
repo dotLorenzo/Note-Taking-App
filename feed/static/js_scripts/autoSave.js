@@ -40,6 +40,26 @@ $(function() {
 
 	function checkChange() {
 		update = setInterval(() => {
+
+			//if autosave selected on Create View and required fields filled out then redirect to the edit page after submit
+			// if( autosaveCheck() ) {
+			// 	if($(title).val()) { //&& $(category).val() && $(note_type).val()
+			// 		$.ajax({
+			// 	        method: 'POST',
+			// 	        url: '/post/new/',
+			// 	        data: {"autosave enabled":true},
+			// 	        success: function(data) {
+			// 	        	console.log('successfully created the post');
+			// 	        },
+			// 	        error: function(data) {
+			// 	        	console.log('couldnt create the post');
+			// 	        }	
+			// 		});
+			// 		// $('form').submit();
+			// 		// window.location.href = window.location.href.replace("/post/new", `/post/${postID}/edit`);
+			// 	}
+			// }
+
 			for (let state in states) {
 				prevState = states[state];
 
@@ -47,9 +67,21 @@ $(function() {
 					currentState = $(state).val();
 
 					if(prevState != currentState) {
+						if(state!=category && state!=title) {
+						
 						states[state] = currentState;
 
+						
 						saveData({"field": state, "value":currentState, "id":postID})
+						}
+						//format title field...remove multi-white space
+						//formatt category field ...remove multi-white space and special chars
+						else {
+							let formattedState;
+							state == category ? formattedState = currentState.trim().replace(/\s\s+/g, ' ').replace(/[!&\/\\#+()£$~%.'":*?<>{}]/g,'') : formattedState = currentState.trim().replace(/\s\s+/g, ' ');
+							states[state] = formattedState;
+							saveData({"field": state, "value":formattedState, "id":postID});
+						}
 					}
 				}
 				else {
