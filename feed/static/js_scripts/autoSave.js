@@ -42,23 +42,39 @@ $(function() {
 		update = setInterval(() => {
 
 			//if autosave selected on Create View and required fields filled out then redirect to the edit page after submit
-			// if( autosaveCheck() ) {
-			// 	if($(title).val()) { //&& $(category).val() && $(note_type).val()
-			// 		$.ajax({
-			// 	        method: 'POST',
-			// 	        url: '/post/new/',
-			// 	        data: {"autosave enabled":true},
-			// 	        success: function(data) {
-			// 	        	console.log('successfully created the post');
-			// 	        },
-			// 	        error: function(data) {
-			// 	        	console.log('couldnt create the post');
-			// 	        }	
-			// 		});
-			// 		// $('form').submit();
-			// 		// window.location.href = window.location.href.replace("/post/new", `/post/${postID}/edit`);
-			// 	}
-			// }
+			if ($('#autosave_checked').length) {
+
+				if( $('#autosave_checked').is(':checked') ) {
+					if($(title).val() && $(category).val() && $(note_type).val()) {
+						console.log('atuosave checked and minimum fields filled out');
+						$.ajax({
+					        method: 'POST',
+					        url: '/post/autocreate/',
+					        data: {"autocreate":true},
+					        success: function(data) {
+					        	console.log('autosave session created');
+					        },
+					        error: function(data) {
+					        	console.log('could not create autosave session');
+					        }	
+						});
+						$('form').submit();
+					}
+				}
+				else {
+					$.ajax({
+				        method: 'POST',
+				        url: '/post/autocreate/',
+				        data: {"autocreate":false},
+				        success: function(data) {
+				        	console.log('autosave session deleted');
+				        },
+				        error: function(data) {
+				        	console.log('could not delete autosave session');
+				        }	
+					});
+				}
+			}
 
 			for (let state in states) {
 				prevState = states[state];

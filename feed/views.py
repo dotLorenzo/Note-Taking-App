@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from django.contrib.messages.views import SuccessMessageMixin
-# from django.contrib import messages
+from django.contrib import messages
 from django.utils import timezone, dateformat
 from django.views.generic import ListView, FormView, DetailView, UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django import forms
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from .models import Post
 from .forms import CreateForm
+from django.urls import reverse
 
 
 class PostListView(ListView):
@@ -21,28 +22,39 @@ class PostDetailView(DetailView):
 	model = Post
 	context_object_name = 'post'
 
+#@method_decorator(csrf_exempt, name='dispatch')
 class CreatePost(SuccessMessageMixin, FormView):
 	template_name = 'feed/form.html'
 	context_object_name = 'post'
+	model = Post
 	form_class = CreateForm
 	success_url = '/'
 
-	def post(self, request, *args, **kwargs):
-		if request.is_ajax():
-			data = request.POST.dict()
-			autosave = data['autosave']
-			print(data)
-			if autosave:
-				self.success_url = f'/post/{self.pk}/edit'
 
-
-		return HttpResponse("returned response")
-	
 	def form_valid(self, form):
 		form.instance.posted_by = self.request.user
-		form.save()
+		new_form = form.save()
 		self.success_message =  f'New notes {form.instance.title} created.'
+
+		if self.request.session.get('autocreate'):
+			del self.request.session['autocreate']
+			return HttpResponseRedirect(reverse('post-edit', kwargs={'pk':new_form.pk}))
+		
 		return super().form_valid(form)
+
+
+@csrf_exempt
+def autocreate(request):
+	if request.is_ajax() and request.method == 'POST':
+		data = request.POST.dict()	
+		autocreate_set = data['autocreate']
+
+		if autocreate_set:
+			request.session['autocreate'] = True
+		else:
+			request.session.pop('autocreate', None)
+
+	return HttpResponse("autocreate set")
 
 
 class EditPostView(SuccessMessageMixin, UpdateView):
@@ -84,7 +96,6 @@ def autosave_post(request):
 		elif "note_type" in field:
 			Post.objects.filter(id=post_id).update(note_type=value)
 		elif "category" in field:
-			print(value)
 			Post.objects.filter(id=post_id).update(category=value)
 		elif "status" in field:
 			Post.objects.filter(id=post_id).update(status=value)

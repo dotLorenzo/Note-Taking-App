@@ -7,7 +7,7 @@ class CreateForm(forms.ModelForm):
 		model = Post
 		fields = ['title', 'note_type', 'author', 'category', 'status', 'rating', 'notes']
 		widgets = {'category': forms.TextInput(attrs={'placeholder':'Enter comma separated categories'})}
-
+		
 	# def clean(self):
 	# 	cleaned_data = super(CreateForm, self).clean()
 		
@@ -18,7 +18,7 @@ class CreateForm(forms.ModelForm):
 
 	# 	for category in categories:
 	# 		self.insert_category(category)
-
+ 
 	def clean_title(self):
 		data  = self.cleaned_data['title']
 		title = ' '.join(data.split())
