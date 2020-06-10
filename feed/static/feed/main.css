@@ -32,6 +32,7 @@ a[data-toggle="collapse"] {
         margin-left: 0;
     }
 }
+
 #sidebar {
     /* don't forget to add all the previously mentioned styles here too */
     background: #eee;

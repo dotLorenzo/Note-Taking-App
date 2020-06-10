@@ -1,7 +1,13 @@
-autosave on creation check-box
+page number reference feature
 
-add categories below dynamically Y
-
-when we update db with title or categories, remove all trailing white space and replace multi-white-space with single white space (and remove special characters?)  Y
+sort by type
 
 auto insert categories to category db and auto remove categories no longer present
+
+sort by category
+
+search feature
+
+evernote API
+
+user creation

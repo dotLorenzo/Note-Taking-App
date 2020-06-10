@@ -18,11 +18,20 @@ class PostListView(ListView):
 	ordering = ['-date_posted']
 	paginate_by = 5
 
+
+	def get_context_data(self, **kwargs):
+		context = super(PostListView, self).get_context_data(**kwargs)
+		context['all_posts'] = reversed(Post.objects.all())
+		filter_note_type = self.kwargs.get('type')
+		if filter_note_type:
+			context['posts'] = reversed(Post.objects.filter(note_type=filter_note_type))
+		return context
+
 class PostDetailView(DetailView):
 	model = Post
 	context_object_name = 'post'
 
-#@method_decorator(csrf_exempt, name='dispatch')
+
 class CreatePost(SuccessMessageMixin, FormView):
 	template_name = 'feed/form.html'
 	context_object_name = 'post'

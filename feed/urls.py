@@ -14,6 +14,7 @@ from .views import (
 urlpatterns = [
 
     path('', PostListView.as_view(), name="feed-home"),
+    path('type/<str:type>/', PostListView.as_view(), name="feed-home-filter-type"),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('post/new/', CreatePost.as_view(), name="post-create"),
     path('post/<int:pk>/edit/', EditPostView.as_view(), name='post-edit'),

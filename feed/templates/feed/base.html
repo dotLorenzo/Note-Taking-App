@@ -32,6 +32,7 @@
   <div class="collapse navbar-collapse" id="navbarToggle">
     <div class="navbar-nav mr-auto">
       <a class="nav-item nav-link" href="{% url 'feed-home' %} ">Home</a>
+      {% if request.path ==  '/' or 'type' in request.path %}
       <li class="dropdown">
        <a class="nav-item nav-link dropdown-toggle" data-toggle="dropdown" href="#">Categories
 	    <span class="caret"></span></a>
@@ -45,19 +46,22 @@
        <a class="nav-item nav-link dropdown-toggle" data-toggle="dropdown" href="#">Type
 	    <span class="caret"></span></a>
 	    <ul class="dropdown-menu">
-	      <li><a class="dropdown-item" href="#">Book</a></li>
-	      <li><a class="dropdown-item" href="#">Documentary</a></li>
-	      <li><a class="dropdown-item" href="#">Thinker</a></li>
-	      <li><a class="dropdown-item" href="#">Other</a></li>
+	      <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='book' %}">Book</a></li>
+	      <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='doc' %}">Documentary</a></li>
+	      <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='thinker' %}">Thinker</a></li>
+	      <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='misc' %}">Other</a></li>
 	    </ul>
 	</li>
+  {% endif %}
 </div>
+{% if request.path ==  '/' or 'type' in request.path %}
 <div class="navbar-nav">
 	<form class="form-inline my-2 my-lg-0 pull-right">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
 </div>
+{% endif %}
 <div class="navbar-nav mt-1">
 <a title="New Notes" class="nav-item nav-link fas fa-plus fa-lg" href="{% url 'post-create' %}"></a>
 <a title="Sign In" class="nav-item nav-link fas fa-plus fas fa-sign-in-alt fa-lg" href=""></a>
