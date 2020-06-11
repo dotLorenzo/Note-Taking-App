@@ -14,9 +14,8 @@
 			</fieldset>
 			<div class="form-group">
 				<button class="btn btn-info" type="submit">Edit Notes</button>
-				<button href="#" class="btn btn-danger">Delete</button>
+				<a class="btn btn-danger" href="{% url 'post-delete' post.id %}">Delete</a></button>
 			</div>
-			<!--{{form.instance.rating}}-->
 		</form>
 	</div>
 </div>
@@ -25,4 +24,4 @@
 <script src = " {% static 'js_scripts/changeFields.js' %} " id="post-id" post-id="{{post.id}}"></script>
 <script src = " {% static 'js_scripts/showCategories.js' %} "></script>
 <script src = " {% static 'js_scripts/autoSave.js' %} "></script>
-y{% endblock %}
+{% endblock %}

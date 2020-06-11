@@ -5,7 +5,8 @@ from .views import (
 	PostListView, 
 	CreatePost, 
 	PostDetailView, 
-	EditPostView, 
+	EditPostView,
+	DeletePostView, 
 	error_404,
 	autosave_post,
 	autocreate
@@ -18,6 +19,7 @@ urlpatterns = [
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('post/new/', CreatePost.as_view(), name="post-create"),
     path('post/<int:pk>/edit/', EditPostView.as_view(), name='post-edit'),
+    path('post/<int:pk>/delete/', DeletePostView.as_view(), name='post-delete'),
     path('post/autosave/', autosave_post, name='post-autosave'),
     path('post/autocreate/', autocreate, name='post-autocreate')
 ]

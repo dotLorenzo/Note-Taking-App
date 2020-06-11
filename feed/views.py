@@ -2,13 +2,14 @@ from django.shortcuts import render
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.utils import timezone, dateformat
-from django.views.generic import ListView, FormView, DetailView, UpdateView
+from django.views.generic import ListView, FormView, DetailView, UpdateView, DeleteView
 from django.views.decorators.csrf import csrf_exempt
 from django import forms
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from .models import Post
 from .forms import CreateForm
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
 class PostListView(ListView):
@@ -66,18 +67,44 @@ def autocreate(request):
 	return HttpResponse("autocreate set")
 
 
-class EditPostView(SuccessMessageMixin, UpdateView):
+class EditPostView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 	model = Post
 	template_name = 'feed/edit_form.html'
 	context_object_name = 'post'
 	fields = ['title', 'note_type', 'author', 'category', 'status', 'rating', 'notes']
 
+	def test_func(self):
+		post = self.get_object()
+		# you cant update anyone elses post!
+		if self.request.user == post.author:
+			return True
+		return False
+
 	def form_valid(self, form):
 		form.instance.date_posted = timezone.now()
 		form.instance.posted_by = self.request.user
 		form.save()
-		self.success_message = f'{form.instance.title} edited.'
+		self.success_message = f'Notes {form.instance.title} edited.'
 		return super().form_valid(form)
+
+class DeletePostView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+	model = Post
+	success_url = '/'
+	success_message = "NOTES DELETED"
+
+	def test_func(self):
+		post = self.get_object()
+		# you cant update anyone elses post!
+		if self.request.user == post.posted_by:
+			return True
+		return False
+
+
+	def delete(self, request, *args, **kwargs):
+		post = self.get_object()
+		self.success_message = f'Notes {post.title} deleted.'
+		messages.warning(self.request, self.success_message % post.__dict__)
+		return super(DeletePostView, self).delete(request, *args, **kwargs)
 
 
 def error_404(request, exception):
