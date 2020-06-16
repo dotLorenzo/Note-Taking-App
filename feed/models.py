@@ -20,6 +20,7 @@ class Categories(models.Model):
 
 	def save(self, *args, **kwargs):
 		self.validate_unique()
+		super(Categories, self).save(*args, **kwargs)
 
 
 class Post(models.Model):

@@ -4,7 +4,9 @@ delete notes  Y
 
 sort by type Y
 
-auto insert categories to category db and auto remove categories no longer present
+auto insert categories to category db Y
+
+auto remove categories no longer present
 
 sort by category
 
