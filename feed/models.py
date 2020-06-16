@@ -18,6 +18,9 @@ class Categories(models.Model):
 	def __str__(self):
 		return self.category
 
+	def save(self, *args, **kwargs):
+		self.validate_unique()
+
 
 class Post(models.Model):
 	type_choices = [

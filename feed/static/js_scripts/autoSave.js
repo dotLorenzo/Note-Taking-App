@@ -20,7 +20,7 @@ $(function() {
 
 	console.log(document.cookie);
 
-	getCookie('CKEDITOR') ? states["CKEDITOR"] = getCookie('CKEDITOR') : states["CKEDITOR"] = prevNotes
+	getCookie('CKEDITOR') ? states["CKEDITOR"] = getCookie('CKEDITOR') : states["CKEDITOR"] = prevNotes;
 
 	checkChange();
 
@@ -45,7 +45,7 @@ $(function() {
 			if ($('#autosave_checked').length) {
 
 				if( $('#autosave_checked').is(':checked') ) {
-					if($(title).val() && $(category).val() && $(note_type).val()) {
+					if($(title).val() && $(category).val() && $(note_type).val() && states["CKEDITOR"]) {
 						console.log('atuosave checked and minimum fields filled out');
 						$.ajax({
 					        method: 'POST',
