@@ -1,6 +1,7 @@
 from django import forms
 from .models import Post, Categories
 import re
+from django.db.models import F
 
 class CreateForm(forms.ModelForm):
 	class Meta:
@@ -28,16 +29,26 @@ class CreateForm(forms.ModelForm):
 	def clean_category(self):
 		data = self.cleaned_data['category']
 		category = re.sub("[!&/\\#+()£$~%.\'\":*?<>{}]", "", data)
-		category = ' '.join(category.split())
+		category = ' '.join(category.split()).strip()
 
-		categories = [c.title() for c in category.split(',')]
+		categories = [c.lower() for c in category.split(',')]
 
-		for c in categories:
-			self.insert_category(c)
+		self.insert_categories(categories)
 
 		return category
 
-	def insert_category(self, category):
-		categories = Categories()
-		categories.category = category
-		categories.save()
+
+	def insert_categories(data):
+		'''insert new categories into db or increment by one if category exists'''
+		for c in categories:
+			try:
+				cat = Categories.objects.filter(category=c)
+				if not cat.exists():
+					new_c = Categories()
+					new_c.category = c
+					new_c.count = 1
+					new_c.save()
+				else:
+					cat.update(count=F('count')+1)
+			except:
+				continue

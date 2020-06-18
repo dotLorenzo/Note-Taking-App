@@ -11,6 +11,7 @@ from django.urls import reverse
 
 class Categories(models.Model):
 	category = models.CharField(max_length=100, unique=True)
+	count = models.IntegerField(default=0)
 
 	class Meta:
 		verbose_name_plural = "Categories"

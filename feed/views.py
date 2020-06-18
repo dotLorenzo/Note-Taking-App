@@ -10,6 +10,7 @@ from .models import Post, Categories
 from .forms import CreateForm
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import F
 import re
 
 class PostListView(ListView):
@@ -85,7 +86,7 @@ class EditPostView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 		form.instance.posted_by = self.request.user
 		form.save()
 		self.success_message = f'Notes {form.instance.title} edited.'
-		self.insert_category(form.instance.category)
+		insert_categories(form.instance.category)
 		return super().form_valid(form)
 
 class DeletePostView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
@@ -103,6 +104,7 @@ class DeletePostView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
 
 	def delete(self, request, *args, **kwargs):
 		post = self.get_object()
+		check_delete_categories(post.category,post.id)
 		self.success_message = f'Notes {post.title} deleted.'
 		messages.warning(self.request, self.success_message % post.__dict__)
 		return super(DeletePostView, self).delete(request, *args, **kwargs)
@@ -133,8 +135,9 @@ def autosave_post(request):
 		elif "note_type" in field:
 			Post.objects.filter(id=post_id).update(note_type=value)
 		elif "category" in field:
-			Post.objects.filter(id=post_id).update(category=value)
+			check_categories(value, post_id)
 			insert_categories(value)
+			Post.objects.filter(id=post_id).update(category=value)
 		elif "status" in field:
 			Post.objects.filter(id=post_id).update(status=value)
 		elif "author" in field:
@@ -152,12 +155,54 @@ def autosave_post(request):
 
 
 def insert_categories(data):
-	category = re.sub("[!&/\\#+()£$~%.\'\":*?<>{}]", "", data)
-	category = ' '.join(category.split())
-
-	categories = [c.title() for c in category.split(',')]
+	'''insert new categories into db or increment by one if category exists'''
+	categories = format_category(data)
 
 	for c in categories:
-		new_c = Categories()
-		new_c.category = category
-		new_c.save()
+		try:
+			cat = Categories.objects.filter(category=c)
+			if not cat.exists():
+				new_c = Categories()
+				new_c.category = c
+				new_c.count = 1
+				new_c.save()
+			else:
+				cat.update(count=F('count')+1)
+		except:
+			continue
+
+def format_category(data):
+	category = re.sub("[!&/\\#+()£$~%.\'\":*?<>{}]", "", data)
+	category = ' '.join(category.split()).strip()
+
+	categories = [c.lower() for c in category.split(',')]
+
+	return categories
+
+def check_categories(category_list,post_id):
+	'''find categories listed in Post db and compare with the newly updated categories from the edited form
+	if there is a category in Post that is not present from the form, reduce count of that category in the Categories db'''
+	prev_cat_list = Post.objects.values().filter(id=post_id)[0]['category']
+
+	prev_cats = [c.lower() for c in prev_cat_list.split(',')]
+
+	current_cats = format_category(category_list)
+	for c in prev_cats:
+		if c not in current_cats:
+			delete_category(c)
+
+def check_delete_categories(category_list, post_id):
+	'''format categories and delete accordingly'''
+	categories = format_category(category_list)
+	for c in categories:
+		delete_category(c)
+
+
+def delete_category(c):
+	'''decrease category count by 1, delete if its 0'''
+	new_c = Categories.objects.filter(category=c)
+	if new_c.exists():
+		new_c.update(count=F('count')-1)
+		cat_count = Categories.objects.filter(category='hmmm').values()[0]['count']
+		if  cat_count <= 0:
+			new_c.delete()
