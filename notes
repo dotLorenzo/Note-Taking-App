@@ -15,3 +15,17 @@ search feature
 evernote API
 
 user creation
+
+
+A post can have many categories (be labeled by many categories), and a category can have many posts (be labeled by many posts).
+
+3 tables. |Post| <- |Labels| -> |Categories|
+
+set up a many to many relationship s.t the post_id column in Labels references
+the id column in Post and the category_id in Labels references the id column
+in Categories.
+
+So each row of the Labels table will use 2 Foreign Keys to create an association
+between rows of Posts and rows of Categories.
+
+https://launchschool.com/books/sql/read/table_relationships

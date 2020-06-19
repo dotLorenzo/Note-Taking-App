@@ -1,4 +1,5 @@
 {% load static %}
+{% load my_extras %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,9 +38,10 @@
        <a class="nav-item nav-link dropdown-toggle" data-toggle="dropdown" href="#">Categories
 	    <span class="caret"></span></a>
 	    <ul class="dropdown-menu">
-	      <li><a class="dropdown-item" href="#">Fiction</a></li>
-	      <li><a class="dropdown-item" href="#">Psychology</a></li>
-	      <li><a class="dropdown-item" href="#">Philosophy</a></li>
+         <li><a class="dropdown-item font-italic font-weight-bold">Top 10</a></li>
+        {% for result in top_categories %}
+        <li><a class="dropdown-item" href="{% url 'feed-home-filter-category' cat=result %}">{{ result }}</a></li>
+        {% endfor %}
 	    </ul>
 	</li>
    <li class="dropdown">

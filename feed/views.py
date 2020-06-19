@@ -23,10 +23,19 @@ class PostListView(ListView):
 
 	def get_context_data(self, **kwargs):
 		context = super(PostListView, self).get_context_data(**kwargs)
-		context['all_posts'] = reversed(Post.objects.all())
+		context['all_posts'] = Post.objects.all().order_by('-date_posted')
+
+		top_categories = Categories.objects.values().order_by('-count')[0:10]
+		context['top_categories'] = [category['category'] for category in top_categories]
+
 		filter_note_type = self.kwargs.get('type')
+		filter_category = self.kwargs.get('cat')
+		
 		if filter_note_type:
-			context['posts'] = reversed(Post.objects.filter(note_type=filter_note_type))
+			context['posts'] = Post.objects.filter(note_type=filter_note_type).order_by('-date_posted')
+		elif filter_category:
+			# context['posts'] = reversed(Post.objects.filter(category='hmmm'))
+			pass
 		return context
 
 class PostDetailView(DetailView):
