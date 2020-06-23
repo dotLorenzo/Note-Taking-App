@@ -8,17 +8,9 @@ class CreateForm(forms.ModelForm):
 		model = Post
 		fields = ['title', 'note_type', 'author', 'category', 'status', 'rating', 'notes']
 		widgets = {'category': forms.TextInput(attrs={'placeholder':'Enter comma separated categories'})}
-		
-	# def clean(self):
-	# 	cleaned_data = super(CreateForm, self).clean()
-		
-	# 	category = cleaned_data['category'].replace("[!&/\\#+()£$~%.\'\":*?<>{}]", " ")
-	# 	category = ' '.join(category.split())
 
-	# 	categories = [c.title() for c in category.split(',')]
-
-	# 	for category in categories:
-	# 		self.insert_category(category)
+	def __init__(self, *args, **kwargs):
+		super(CreateForm, self).__init__(*args, **kwargs)
  
 	def clean_title(self):
 		data  = self.cleaned_data['title']
@@ -26,29 +18,32 @@ class CreateForm(forms.ModelForm):
 
 		return title
 
-	def clean_category(self):
-		data = self.cleaned_data['category']
-		category = re.sub("[!&/\\#+()£$~%.\'\":*?<>{}]", "", data)
-		category = ' '.join(category.split()).strip()
+	# def clean_category(self):
+	# 	print(self.post_id)
+	# 	data = self.cleaned_data['category']
+	# 	category = re.sub("[!&/\\#+()£$~%.\'\":*?<>{}]", "", data)
+	# 	category = ' '.join(category.split()).strip()
 
-		categories = [c.lower() for c in category.split(',')]
+	# 	categories = [c.lower() for c in category.split(',')]
 
-		self.insert_categories(categories)
+	# 	self.insert_categories(categories, post_id)
 
-		return category
+	# 	return category
 
 
-	def insert_categories(data):
-		'''insert new categories into db or increment by one if category exists'''
-		for c in categories:
-			try:
-				cat = Categories.objects.filter(category=c)
-				if not cat.exists():
-					new_c = Categories()
-					new_c.category = c
-					new_c.count = 1
-					new_c.save()
-				else:
-					cat.update(count=F('count')+1)
-			except:
-				continue
+	# def insert_categories(self, categories, post_id):
+	# 	'''insert new categories into Post db and M2M db or increment by one if category exists'''
+	# 	for c in categories:
+	# 		try:
+	# 			cat = Categories.objects.filter(category=c)
+	# 			if not cat.exists():
+	# 				new_c = Categories()
+	# 				new_c.category = c
+	# 				new_c.count = 1
+	# 				new_c.save()
+	# 			else:
+	# 				cat.update(count=F('count')+1)
+	# 			# insert each category to the M2M db for the corresponding post object
+	# 			Post.objects.get(id=post_id).categories.add(Categories.objects.get(category=c))
+	# 		except:
+	# 			continue

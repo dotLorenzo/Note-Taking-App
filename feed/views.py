@@ -29,13 +29,13 @@ class PostListView(ListView):
 		context['top_categories'] = [category['category'] for category in top_categories]
 
 		filter_note_type = self.kwargs.get('type')
-		filter_category = self.kwargs.get('cat')
-		
+		filter_cat_type = self.kwargs.get('cat')
+
 		if filter_note_type:
 			context['posts'] = Post.objects.filter(note_type=filter_note_type).order_by('-date_posted')
-		elif filter_category:
-			# context['posts'] = reversed(Post.objects.filter(category='hmmm'))
-			pass
+		if filter_cat_type:
+			context['posts'] = Categories.objects.get(category=filter_cat_type).post_set.values().order_by('-date_posted')
+
 		return context
 
 class PostDetailView(DetailView):
@@ -56,10 +56,12 @@ class CreatePost(SuccessMessageMixin, FormView):
 		new_form = form.save()
 		self.success_message =  f'New notes {form.instance.title} created.'
 
+		insert_categories(form.instance.category, form.instance.id)
+
 		if self.request.session.get('autocreate'):
 			del self.request.session['autocreate']
 			return HttpResponseRedirect(reverse('post-edit', kwargs={'pk':new_form.pk}))
-		
+
 		return super().form_valid(form)
 
 
@@ -69,7 +71,8 @@ def autocreate(request):
 		data = request.POST.dict()	
 		autocreate_set = data['autocreate']
 
-		if autocreate_set:
+		if autocreate_set == True:
+			print("CREATING AUTOCREATE SESSION")
 			request.session['autocreate'] = True
 		else:
 			request.session.pop('autocreate', None)
@@ -95,7 +98,7 @@ class EditPostView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 		form.instance.posted_by = self.request.user
 		form.save()
 		self.success_message = f'Notes {form.instance.title} edited.'
-		insert_categories(form.instance.category)
+		insert_categories(form.instance.category, self.get_object().id)
 		return super().form_valid(form)
 
 class DeletePostView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
@@ -145,7 +148,7 @@ def autosave_post(request):
 			Post.objects.filter(id=post_id).update(note_type=value)
 		elif "category" in field:
 			check_categories(value, post_id)
-			insert_categories(value)
+			insert_categories(value, post_id)
 			Post.objects.filter(id=post_id).update(category=value)
 		elif "status" in field:
 			Post.objects.filter(id=post_id).update(status=value)
@@ -163,7 +166,7 @@ def autosave_post(request):
 		return HttpResponse(autosave_message)
 
 
-def insert_categories(data):
+def insert_categories(data, post_id):
 	'''insert new categories into db or increment by one if category exists'''
 	categories = format_category(data)
 
@@ -177,8 +180,11 @@ def insert_categories(data):
 				new_c.save()
 			else:
 				cat.update(count=F('count')+1)
+			# insert each category to the M2M db for the corresponding post object
+			Post.objects.get(id=post_id).categories.add(Categories.objects.get(category=c))
 		except:
 			continue
+
 
 def format_category(data):
 	category = re.sub("[!&/\\#+()£$~%.\'\":*?<>{}]", "", data)
@@ -212,6 +218,6 @@ def delete_category(c):
 	new_c = Categories.objects.filter(category=c)
 	if new_c.exists():
 		new_c.update(count=F('count')-1)
-		cat_count = Categories.objects.filter(category='hmmm').values()[0]['count']
+		cat_count = new_c.values()[0]['count'] #Categories.objects.filter(category='hmmm') CHECK HERE IF ERROR
 		if  cat_count <= 0:
 			new_c.delete()

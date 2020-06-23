@@ -8,13 +8,14 @@ auto insert categories to category db Y
 
 auto remove categories no longer present Y
 
-sort by category
+sort by category Y
 
 search feature
 
 evernote API
 
 user creation
+
 
 
 A post can have many categories (be labeled by many categories), and a category can have many posts (be labeled by many posts).

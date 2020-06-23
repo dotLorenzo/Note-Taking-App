@@ -41,9 +41,10 @@ $(function() {
 	function checkChange() {
 		update = setInterval(() => {
 
+			($('#autosave_checked').length) ? console.log("exists") : console.log("does not exist");
+
 			//if autosave selected on Create View and required fields filled out then redirect to the edit page after submit
 			if ($('#autosave_checked').length) {
-
 				if( $('#autosave_checked').is(':checked') ) {
 					if($(title).val() && $(category).val() && $(note_type).val() && states["CKEDITOR"]) {
 						console.log('atuosave checked and minimum fields filled out');
