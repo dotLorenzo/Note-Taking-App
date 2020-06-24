@@ -80,7 +80,7 @@ Knowledge Tree is an application designed to faciliate learning through organisi
 		    </p> -->
 		    <p class="pt-2">
 		    	{% for category in post.category|format_category %}
-		    	<a href="#" class="btn btn-primary btn-sm">{{ category }}</a>
+		    	<a href="{% url 'feed-home-filter-category' cat=category %}" class="btn btn-primary btn-sm">{{ category }}</a>
 		    	{% endfor %}
 		    </p>
 		    <p class="article-content">{{ post.notes | safe }}</p>		

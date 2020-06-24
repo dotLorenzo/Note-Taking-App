@@ -10,7 +10,7 @@ from .models import Post, Categories
 from .forms import CreateForm
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.db.models import F
+from django.db.models import F, Q
 import re
 
 class PostListView(ListView):
@@ -34,7 +34,7 @@ class PostListView(ListView):
 		if filter_note_type:
 			context['posts'] = Post.objects.filter(note_type=filter_note_type).order_by('-date_posted')
 		if filter_cat_type:
-			context['posts'] = Categories.objects.get(category=filter_cat_type).post_set.values().order_by('-date_posted')
+			context['posts'] = Categories.objects.get(category=filter_cat_type.lower()).post_set.values().order_by('-date_posted')
 
 		return context
 
@@ -221,3 +221,40 @@ def delete_category(c):
 		cat_count = new_c.values()[0]['count'] #Categories.objects.filter(category='hmmm') CHECK HERE IF ERROR
 		if  cat_count <= 0:
 			new_c.delete()
+
+
+def search(request):
+	'''search db for a query
+	search for a specific title using: "keyword" in TITLE
+	search for a keyword in notes using: "keyword" in NOTES
+	search for status using: STATUS is CURRENTSTATUS
+	default search is in title, author, category and notes
+	'''
+	template = 'feed/home.html'
+
+	query = request.GET.get('q')
+
+	title_search = re.match(r'^"{1}.+"{1}\s{1}in\s{1}TITLE$', query)
+	notes_search = re.match(r'^"{1}.+"{1}\s{1}in\s{1}NOTES$', query)
+	status_search = re.match(r'^STATUS\s{1}is\s{1}(TO DO|IN PROGRESS|COMPLETED)$', query)
+	
+	if query:
+		if title_search:
+			keyword = query.split("\"")[1]
+			results = Post.objects.filter(Q(title__icontains=keyword)).order_by('-date_posted')
+		elif notes_search:
+			keyword = query.split("\"")[1]
+			results = Post.objects.filter(Q(notes__icontains=keyword)).order_by('-date_posted')
+		elif status_search:
+			status = query.split("is")[1].lstrip().lower()
+			results = Post.objects.filter(status=status).order_by('-date_posted')
+		else:
+			results = Post.objects.filter(Q(title__icontains=query) | Q(author__icontains=query) | Q(category__icontains=query) | Q(notes__icontains=query)).order_by('-date_posted')
+	else:
+		results = Post.objects.all().order_by('-date_posted')
+
+	context = {
+		'posts': results
+	}
+
+	return render(request, template, context)
