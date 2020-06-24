@@ -32,7 +32,7 @@
 		    	<a href="{% url 'feed-home-filter-category' cat=category %}" class="btn btn-primary btn-sm">{{ category }}</a>
 		    	{% endfor %}
 		    </p>
-		    <p class="article-content">{{ post.notes | safe }}</p>		
+		    <p class="article-content">{{ post.notes|format_notes|safe}}</p>		
 		  </div>
 
 	  	    <div class="ml-auto pt-5">

@@ -251,7 +251,14 @@ def search(request):
 		else:
 			results = Post.objects.filter(Q(title__icontains=query) | Q(author__icontains=query) | Q(category__icontains=query) | Q(notes__icontains=query)).order_by('-date_posted')
 	else:
-		results = Post.objects.all().order_by('-date_posted')
+		messages.warning(request, f"""Your search for "{query}" did you return any results...you can:
+			Search for a specific title: "keyword" in TITLE
+			Search for a word in notes: "keyword" in NOTES
+			Search for status: STATUS is CURRENTSTATUS
+			The default search is in title, author, category and notes
+			""")
+		return HttpResponseRedirect(reverse('feed-home'))
+
 
 	context = {
 		'posts': results

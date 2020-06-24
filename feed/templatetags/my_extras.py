@@ -1,5 +1,6 @@
 from django import template
 from ..models import Post
+import re
 
 register = template.Library()
 
@@ -19,3 +20,9 @@ def diff(num):
 def get_categories(data):
 	categories = [c.title() for c in data.split(',')]
 	return sorted(categories)
+
+@register.filter(name="format_notes")
+def format_notes(notes):
+
+	format_pages = re.sub(r"\[p{1}(\d)+\]", r"<b><i>[Page \1]</i></b>", notes)
+	return format_pages
