@@ -16,6 +16,7 @@ evernote API
 
 user creation
 
+MySQL db?
 
 A post can have many categories (be labeled by many categories), and a category can have many posts (be labeled by many posts).
 

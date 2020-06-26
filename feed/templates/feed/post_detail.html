@@ -11,6 +11,7 @@
 		      <small class="text-muted">{{ post.date_posted|date:"d F, Y P e" }}</small>
 		        <a href="{% url 'post-edit' post.id%}" class="btn btn-default btn-sm ml-3">Edit</a>
 		    <a href="{% url 'post-delete' post.id %}" class="btn btn-default btn-sm">Delete</a>
+		    <a href="{% url 'post-evernote' post.id %}" ><img src="{% static 'img/evernote_logo.png' %}" id="evernote_logo"></a>
 		    </div>
 		    <h2>
 		    {% if post.note_type == "book" %}

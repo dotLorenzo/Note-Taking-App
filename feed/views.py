@@ -122,6 +122,20 @@ class DeletePostView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
 		return super(DeletePostView, self).delete(request, *args, **kwargs)
 
 
+def evernote(request, post_id):
+	'''send post to evernote'''
+	template = 'feed/post_send_to_evernote.html'
+
+	title = Post.objects.get(pk=post_id).title
+
+	context = {
+	'title':title,
+	'post_id': post_id
+	}
+
+	return render(request, template, context)
+
+
 def error_404(request, exception):
 	return render(request, 'feed/404.html', {})
 

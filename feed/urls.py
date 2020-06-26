@@ -10,7 +10,8 @@ from .views import (
 	error_404,
 	autosave_post,
 	autocreate,
-	search
+	search,
+    evernote
 	)
 
 urlpatterns = [
@@ -24,5 +25,6 @@ urlpatterns = [
     path('post/<int:pk>/edit/', EditPostView.as_view(), name='post-edit'),
     path('post/<int:pk>/delete/', DeletePostView.as_view(), name='post-delete'),
     path('post/autosave/', autosave_post, name='post-autosave'),
-    path('post/autocreate/', autocreate, name='post-autocreate')
+    path('post/autocreate/', autocreate, name='post-autocreate'),
+    path('post/<int:post_id>/evernote/', evernote, name="post-evernote")
 ]
