@@ -1,14 +1,20 @@
 from evernote.api.client import EvernoteClient
 import evernote.edam.type.ttypes as Types
+import request
 
-try:
-	dev_token = "S=s1:U=95fbd:E=17a48581d36:C=172f0a6f0e0:P=1cd:A=en-devtoken:V=2:H=36e8dedf986a4a3896d0e184e6142fc8"
-	client = EvernoteClient(token=dev_token)
-	userStore = client.get_user_store()
-	user = userStore.getUser()
-	print(f"Connected Evernote user {user.username}")
-except:
-	print(f"Could not connect to Evernote")
+# client = EvernoteClient(
+# 	consumer_key='laurence485-1218',
+# 	consumer_secret='a1ec741b39e45a67',
+# 	sandbox=True)
+
+# try:
+# 	dev_token = "S=s1:U=95fbd:E=17a48581d36:C=172f0a6f0e0:P=1cd:A=en-devtoken:V=2:H=36e8dedf986a4a3896d0e184e6142fc8"
+# 	client = EvernoteClient(token=dev_token)
+# 	userStore = client.get_user_store()
+# 	user = userStore.getUser()
+# 	print(f"Connected Evernote user {user.username}")
+# except:
+# 	print(f"Could not connect to Evernote")
 
 try:
 	noteStore = client.get_note_store()

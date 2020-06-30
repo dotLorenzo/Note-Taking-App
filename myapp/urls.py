@@ -14,13 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from oauth import views as oauth_views
 
 urlpatterns = [
 	path('', include('feed.urls')),
     path('admin/', admin.site.urls),
+
+    path('oauth/', oauth_views.index, name="evernote_index"),
+    path('oauth/auth/post/<int:post_id>/', oauth_views.auth, name="evernote_auth"),
+    path("oauth/callback/", oauth_views.callback, name="evernote_callback"),
+    path("oauth/reset/", oauth_views.reset, name="evernote_auth_reset")
 ]
 
 handler404 = 'feed.views.error_404'

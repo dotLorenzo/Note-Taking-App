@@ -12,7 +12,10 @@ sort by category Y
 
 search feature Y
 
-evernote API
+evernote API Y
+
+1) implement sending fields from db to evernote
+2) hook up to real evernote account (not sandbox)
 
 user creation
 

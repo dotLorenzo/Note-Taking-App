@@ -2,7 +2,6 @@
 {% load static %} 
 {% block content %}
 	<div class="content-section">
-		<form method="POST">
 			{% csrf_token %} <!--required by django for security (sql attacks)-->
 			<fieldset class="form-group">
 				<legend class="border-bottom mb-4">Send Post to Evernote
@@ -10,10 +9,7 @@
 				</legend>
 				<h2>Send the notes "{{ title }}" to Evernote?</h2>
 			</fieldset>
-			<div class="form-group">
-				<button class="btn btn-outline-success" type="submit">Send</button>
-				<a class="btn btn-outline-secondary" href="{% url 'post-detail' post_id %}">Cancel</a>
-			</div>
-		</form>
+			<a class="btn btn-outline-success" href="{% url 'evernote_auth' post_id %}">Send</a>
+			<a class="btn btn-outline-secondary" href="{% url 'post-detail' post_id %}">Cancel</a>
 	</div>
 {% endblock content %}
