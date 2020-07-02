@@ -34,7 +34,7 @@ class PostListView(ListView):
 		if filter_note_type:
 			context['posts'] = Post.objects.filter(note_type=filter_note_type).order_by('-date_posted')
 		if filter_cat_type:
-			context['posts'] = Categories.objects.get(category=filter_cat_type.lower()).post_set.values().order_by('-date_posted')
+			context['posts'] = Categories.objects.get(category=filter_cat_type.lower()).post_set.all().order_by('-date_posted')
 
 		return context
 
@@ -43,7 +43,7 @@ class PostDetailView(DetailView):
 	context_object_name = 'post'
 
 
-class CreatePost(SuccessMessageMixin, FormView):
+class CreatePost(LoginRequiredMixin, SuccessMessageMixin, FormView):
 	template_name = 'feed/form.html'
 	context_object_name = 'post'
 	model = Post
@@ -60,6 +60,7 @@ class CreatePost(SuccessMessageMixin, FormView):
 
 		if self.request.session.get('autocreate'):
 			del self.request.session['autocreate']
+			print('autocreating post')
 			return HttpResponseRedirect(reverse('post-edit', kwargs={'pk':new_form.pk}))
 
 		return super().form_valid(form)
@@ -71,7 +72,7 @@ def autocreate(request):
 		data = request.POST.dict()	
 		autocreate_set = data['autocreate']
 
-		if autocreate_set == True:
+		if autocreate_set == 'true':
 			print("CREATING AUTOCREATE SESSION")
 			request.session['autocreate'] = True
 		else:
@@ -80,7 +81,7 @@ def autocreate(request):
 	return HttpResponse("autocreate set")
 
 
-class EditPostView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class EditPostView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
 	model = Post
 	template_name = 'feed/edit_form.html'
 	context_object_name = 'post'
@@ -89,7 +90,7 @@ class EditPostView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 	def test_func(self):
 		post = self.get_object()
 		# you cant update anyone elses post!
-		if self.request.user == post.author:
+		if self.request.user == post.posted_by:
 			return True
 		return False
 
@@ -101,7 +102,7 @@ class EditPostView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 		insert_categories(form.instance.category, self.get_object().id)
 		return super().form_valid(form)
 
-class DeletePostView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class DeletePostView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
 	model = Post
 	success_url = '/'
 	success_message = "NOTES DELETED"

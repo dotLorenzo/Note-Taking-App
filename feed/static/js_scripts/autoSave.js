@@ -41,7 +41,7 @@ $(function() {
 	function checkChange() {
 		update = setInterval(() => {
 
-			($('#autosave_checked').length) ? console.log("exists") : console.log("does not exist");
+			// ($('#autosave_checked').length) ? console.log("exists") : console.log("does not exist");
 
 			//if autosave selected on Create View and required fields filled out then redirect to the edit page after submit
 			if ($('#autosave_checked').length) {

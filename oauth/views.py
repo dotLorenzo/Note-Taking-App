@@ -1,5 +1,5 @@
-from evernote.api.client import EvernoteClient
-import evernote.edam.type.ttypes as Types
+from evernote_sdk_python3.lib.evernote.api.client import EvernoteClient
+import evernote_sdk_python3.lib.evernote.edam.type.ttypes as Types
 from django.urls import reverse
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -29,7 +29,7 @@ def auth(request, post_id):
 	try:
 		client = EvernoteClient(token=request.session['access_token'])
 		# note_store = client.get_note_store()
-		send_to_evernote(client)
+		send_to_evernote(client, post_id)
 
 		messages.success(request, 'Notes successfully sent to Evernote.')
 
@@ -38,7 +38,7 @@ def auth(request, post_id):
 	except:
 		client = get_evernote_client()
 		callbackUrl = 'http://%s%s' % (
-			request.get_host(), reverse('evernote_callback'))
+			request.get_host(), reverse('evernote_callback', kwargs={'post_id':post_id}))
 		request_token = client.get_request_token(callbackUrl)
 
 		# Save the request token information for later
@@ -48,43 +48,53 @@ def auth(request, post_id):
 		# 	# Redirect the user to the Evernote authorization URL
 		return redirect(client.get_authorize_url(request_token))
 
-def send_to_evernote(client):
+def send_to_evernote(client, post_id):
 	'''create specified notes inside evernote'''
 	try:
-		noteStore = client.get_note_store()
-		notebooks = noteStore.listNotebooks()
-		for n in notebooks:
-			print (n.name, n.guid)
+		# noteStore = client.get_note_store()
+		# notebooks = noteStore.listNotebooks()
+		# for n in notebooks:
+		# 	print (n.name, n.guid)
+
+		post = Post.objects.get(pk=post_id)
+		title = post.title
+		author = post.author
+		categories = [c.category for c in post.categories.all()]
+		notes = post.notes
+
+		if author:
+			categories.append(author)
 
 		notebook_guid = "95069c18-ac04-42e2-84cf-b6b9314e78b7"
 		notebook_name = "My Notebook"
-
+		
 		noteStore = client.get_note_store()
 		note = Types.Note()
-		note.title = "I'm a test note!"
+		note.title = title
 		note.content = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'
-		note.content += '<en-note><strong>Hello world test!</strong></en-note>'
-		note.tagNames = ['author', 'cat1','cat2']
+		note.content += f'<en-note>{notes}</en-note>'
+		note.tagNames = categories
 		note.notebookGuid = notebook_guid
 		note = noteStore.createNote(note)
 
-		print(f"Successfully created a new note in notebook: {notebook_name}, with GUID: {notebook_guid}" )
+		print(f'Successfully created notes "{note.title}" in notebook: {notebook_name}, with GUID: {notebook_guid}' )
 	except:
 		print("Could not create note.")
 
-def callback(request):
+def callback(request, post_id):
 	try:
 		client = get_evernote_client()
-		client.get_access_token(
+		access_token = client.get_access_token(
 			request.session['oauth_token'],
 			request.session['oauth_token_secret'],
 			request.GET.get('oauth_verifier', '')
 		)
+		print(f'access token: {access_token}')
 	except KeyError:
 		messages.warning(request, 'Could not connect to Evernote.')
 		return redirect('/')
 
-	send_to_evernote(client)
+	send_to_evernote(client, post_id)
 	
 	return render(request, 'oauth/callback.html', {'notebooks': notebooks})
 

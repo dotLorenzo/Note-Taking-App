@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'feed.apps.FeedConfig',
+    'users.apps.UsersConfig',
     'crispy_forms',
     'ckeditor',
     'django.contrib.admin',
@@ -142,3 +143,6 @@ CKEDITOR_CONFIGS = {
                 ['Styles', 'Format', 'Font', 'FontSize', 'TextColor', 'BGColor', 'HorizontalRule', 'Smiley', 'SpecialChar'],["Maximize"]],
     },
 }
+
+LOGIN_REDIRECT_URL ='feed-home'
+LOGIN_URL = 'login'

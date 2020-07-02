@@ -14,12 +14,12 @@ search feature Y
 
 evernote API Y
 
-1) implement sending fields from db to evernote
+1) implement sending fields from db to evernote Y
 2) hook up to real evernote account (not sandbox)
 
-user creation
+user creation Y
 
-MySQL db?
+MySQL db? N
 
 A post can have many categories (be labeled by many categories), and a category can have many posts (be labeled by many posts).
 

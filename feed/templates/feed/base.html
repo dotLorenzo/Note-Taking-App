@@ -65,9 +65,14 @@
 </div>
 {% endif %}
 <div class="navbar-nav mt-1">
-<a title="New Notes" class="nav-item nav-link fas fa-plus fa-lg" href="{% url 'post-create' %}"></a>
-<a title="Sign In" class="nav-item nav-link fas fa-plus fas fa-sign-in-alt fa-lg" href=""></a>
-<a title="Sign Up" class="nav-item nav-link fas fa-user-plus fa-lg" href=""></a>
+{% if user.is_authenticated %} <!-- if user is logged in -->
+  <a title="New Notes" class="nav-item nav-link fas fa-plus fa-lg" href="{% url 'post-create' %}"></a>
+  <a title="Profile" class="nav-item nav-link fas fa-plus fas fa-user-alt fa-lg" href="{% url 'profile' %}"></a>
+  <a title="Logout" class="nav-item nav-link fas fa-plus fas fa-sign-out-alt fa-lg" href="{% url 'logout' %}"></a>
+{% else %}
+  <a title="Sign In" class="nav-item nav-link fas fa-plus fas fa-sign-in-alt fa-lg" href="{% url 'login' %}"></a>
+  <a title="Sign Up" class="nav-item nav-link fas fa-user-plus fa-lg" href="{% url 'register' %}"></a>
+{% endif %}
  </div>
   </div>
 </div>
