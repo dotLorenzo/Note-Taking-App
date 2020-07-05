@@ -1,0 +1,7 @@
+#ignore django secrety key
+
+myapp/secrets.py
+
+#ignore evernote configurations
+
+myapp/oauth/config.py
