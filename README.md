@@ -6,4 +6,4 @@ feed. Django backend to handle database, user profiles and authentication, and J
 Regex searches to allow complex querying and grouping of notes from the database. Autosave feature to prevent data-loss
 and works with Evernote API in order to allow note transfer between the two apps.
 
-To use this app you will need to add your Django secret key to secrets.py as well as your evernote consumer and secret keys to oauth/config.py
+To use this app you will need to add your Django secret key to secrets.py as well as your Evernote consumer and secret keys to oauth/config.py
