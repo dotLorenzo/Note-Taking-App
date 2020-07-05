@@ -11,11 +11,16 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+try:
+    sys.path.index(os.getcwd()+'/evernote_sdk_python3/lib')
 
+except ValueError:
+    sys.path.append(os.getcwd()+'/evernote_sdk_python3/lib')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
