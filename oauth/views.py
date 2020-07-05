@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.http import HttpResponse
-from .config import EN_CONSUMER_KEY, EN_CONSUMER_SECRET
+from .config import EN_CONSUMER_KEY, EN_CONSUMER_SECRET, MY_ACCESS_TOKEN
 from feed.models import Post
 
 def get_evernote_client(token=None):
@@ -24,7 +24,7 @@ def index(request):
 
 
 def auth(request, post_id):
-	request.session['access_token'] = 'S=s1:U=95fbd:E=17a5ccf31de:C=173051e0400:P=185:A=laurence485-1218:V=2:H=1e53ca4018479345d0f9f1e2069e8b02'
+	request.session['access_token'] = MY_ACCESS_TOKEN
 
 	try:
 		client = EvernoteClient(token=request.session['access_token'])
