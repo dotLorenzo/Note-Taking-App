@@ -1,5 +1,5 @@
-# Note-Taking-App
-Note Taking App (Knowledge Tree) (Django, JavaScript, Bootstrap)
+# Note-Taking-App ("Knowledge Tree")
+Note Taking App (Django, JavaScript, Bootstrap)
 
 Knowledge Tree is a note taking app designed to provide easy organisation, categorisation and searchability of notes. Multiple users can upload notes to a common
 feed. Django backend to handle database, user profiles and authentication, and JavaScript / Bootstrap frontend for asynchronous functions, cookie handling and styling.
