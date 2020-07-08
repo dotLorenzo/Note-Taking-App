@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import F, Q
 import re
+from django.contrib.auth.decorators import login_required
 
 class PostListView(ListView):
 	model = Post
@@ -123,6 +124,7 @@ class DeletePostView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixi
 		return super(DeletePostView, self).delete(request, *args, **kwargs)
 
 
+@login_required
 def evernote(request, post_id):
 	'''send post to evernote'''
 	template = 'feed/post_send_to_evernote.html'
