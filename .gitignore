@@ -6,4 +6,3 @@ secrets.py
 
 oauth/config.py
 
-db.sqlite3
