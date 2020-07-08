@@ -207,7 +207,7 @@ def format_category(data):
 	category = re.sub("[!&/\\#+()£$~%.\'\":*?<>{}]", "", data)
 	category = ' '.join(category.split()).strip()
 
-	categories = [c.lower() for c in category.split(',')]
+	categories = [c.lower().strip() for c in category.split(',')]
 
 	return categories
 
@@ -216,7 +216,7 @@ def check_categories(category_list,post_id):
 	if there is a category in Post that is not present from the form, reduce count of that category in the Categories db'''
 	prev_cat_list = Post.objects.values().filter(id=post_id)[0]['category']
 
-	prev_cats = [c.lower() for c in prev_cat_list.split(',')]
+	prev_cats = [c.lower().strip() for c in prev_cat_list.split(',')]
 
 	current_cats = format_category(category_list)
 	for c in prev_cats:
