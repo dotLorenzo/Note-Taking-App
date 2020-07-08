@@ -5,3 +5,5 @@ secrets.py
 #ignore evernote configurations
 
 oauth/config.py
+
+db.sqlite3
