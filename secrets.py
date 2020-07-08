@@ -1,1 +1,0 @@
-MY_SECRET_KEY = 'kxo4#%9-$y^9c7w_ytih+_r*c(+^*&&0+o$sv2@y()-ct@%#71'
