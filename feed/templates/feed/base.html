@@ -33,32 +33,32 @@
   <div class="collapse navbar-collapse" id="navbarToggle">
     <div class="navbar-nav mr-auto">
       <a class="nav-item nav-link" href="{% url 'feed-home' %} ">Home</a>
-      {% if request.path ==  '/' or 'type' or 'category' in request.path %}
+      {% if not 'post' in request.path %}
       <li class="dropdown">
        <a class="nav-item nav-link dropdown-toggle" data-toggle="dropdown" href="#">Categories
-	    <span class="caret"></span></a>
-	    <ul class="dropdown-menu">
+      <span class="caret"></span></a>
+      <ul class="dropdown-menu">
          <li><a class="dropdown-item font-italic font-weight-bold">Top 10</a></li>
         {% for result in top_categories %}
         <li><a class="dropdown-item" href="{% url 'feed-home-filter-category' cat=result %}">{{ result }}</a></li>
         {% endfor %}
-	    </ul>
-	</li>
+      </ul>
+  </li>
    <li class="dropdown">
        <a class="nav-item nav-link dropdown-toggle" data-toggle="dropdown" href="#">Type
-	    <span class="caret"></span></a>
-	    <ul class="dropdown-menu">
-	      <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='book' %}">Book</a></li>
-	      <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='doc' %}">Documentary</a></li>
-	      <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='thinker' %}">Thinker</a></li>
-	      <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='misc' %}">Other</a></li>
-	    </ul>
-	</li>
+      <span class="caret"></span></a>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='book' %}">Book</a></li>
+        <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='doc' %}">Documentary</a></li>
+        <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='thinker' %}">Thinker</a></li>
+        <li><a class="dropdown-item" href="{% url 'feed-home-filter-type' type='misc' %}">Other</a></li>
+      </ul>
+  </li>
   {% endif %}
 </div>
-{% if request.path ==  '/' or 'type' or 'category' in request.path %}
+{% if not 'post' in request.path %}
 <div class="navbar-nav">
-	<form class="form-inline my-2 my-lg-0 pull-right" action="{% url 'feed-search' %}">
+  <form class="form-inline my-2 my-lg-0 pull-right" action="{% url 'feed-search' %}">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{request.GET.q}}">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
@@ -84,7 +84,7 @@
     <div class="alert alert-{{message.tags}} text-center">
     {{ message|linebreaks }}
     </div>
-	</div>
+  </div>
     {% endfor %}
   {% endif %}
 
